@@ -41,6 +41,8 @@ class cSeduService
       {
          smMiniDMX,
          smTpm2,
+		 smMiniDMX_A1,
+		 smMiniDMX_B0,
          smCount
       };
 

@@ -397,8 +397,10 @@ cSeduSetup::cSeduSetup()
 
    // sedu mode
 
-   seduModes[0] = "miniDMX";
-   seduModes[1] = "tpm2";
+   seduModes[smMiniDMX] 	= "miniDMX_512";
+   seduModes[smTpm2] 		= "tpm2";
+   seduModes[smMiniDMX_A1] 	= "miniDMX_192";
+   seduModes[smMiniDMX_B0] 	= "miniDMX_768";
 
    // rgb order
 
@@ -453,7 +455,7 @@ void cSeduSetup::Setup()
    Add(new cMenuEditIntItem(tr("Level green [%]"), &data.adjGreen, 0, 100));
    Add(new cMenuEditIntItem(tr("Level blue [%]"), &data.adjBlue, 0, 100));
 
-   Add(new cMenuEditStraItem(tr("SEDU mode"), (int*)&data.seduMode, 2, seduModes));
+   Add(new cMenuEditStraItem(tr("SEDU mode"), (int*)&data.seduMode, 4, seduModes));
    Add(new cMenuEditStraItem(tr("SEDU RGB order"), &rgbOrderIndex, 6, seduRGBOrders));
 }
 
