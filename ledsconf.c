@@ -11,6 +11,7 @@
 #include "common.h"
 #include "config.h"
 #include "ledsconf.h"
+#include "setup.h"
 
 //***************************************************************************
 // cLedConf
@@ -29,7 +30,18 @@ cLedConf::cLedConf()
 }
 
 //***************************************************************************
-// Parse like like "led 0-1 14-17"
+// Parse like like "led bot 0-1 14-17"
+//
+//   # left
+//   led left 0  0
+//   led left 0  1
+//   led left 0  2
+//   led left 0  3
+//   led left 0  4
+//   led left 0  5
+//   led left 0  6
+//   led left 0  7
+//   
 //***************************************************************************
 
 bool cLedConf::Parse(const char* s)
@@ -83,6 +95,11 @@ bool cLedConf::Parse(const char* s)
    if (!parseRange(p, y, toY))
       return false;
    
+   // parse optinal RGB order
+
+   if (!parseRgbOrder(p, rgbOrder))
+      return false;
+   
    return true;
 }
 
@@ -110,6 +127,30 @@ bool cLedConf::parseRange(const char*& p, int& from, int& to)
       return false;
 
    to = strtol(p, (char**)&p, 0);
+
+   return true;
+}
+
+//***************************************************************************
+// Parse RGB Order
+//***************************************************************************
+
+bool cLedConf::parseRgbOrder(const char*& p, char* rgbOrder)
+{
+   int size ;
+   p = skipWs(p);
+
+   size = strlen(p);
+
+   strcpy(rgbOrder, cfg.seduRGBOrder);  // the defaul
+
+   if (size == 0)
+      return true;
+
+   if (cSeduSetup::toOrderIndex(p) == na)
+      return error("Invalid RGB order '%s' configured", p);
+
+   strcpy(rgbOrder, p);
 
    return true;
 }

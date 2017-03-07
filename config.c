@@ -103,6 +103,7 @@ cSeduConfig::cLed* cSeduConfig::createLeds(cLedConfs* conf)
          leds[seq].y   = l->Y(); 
          leds[seq].toX = l->ToX();
          leds[seq].toY = l->ToY();
+         sprintf(leds[seq].rgbOrder, "%.3s", l->RgbOrder());
          
          seq++;
       }
