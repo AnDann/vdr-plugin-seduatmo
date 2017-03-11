@@ -11,38 +11,15 @@
 #include "seduthread.h"
 #include "config.h"
 #include "ledsconf.h"
+#include "setup.h"
 
 //***************************************************************************
 // 
 //***************************************************************************
 
-static const char *VERSION        = "0.0.2";
+static const char *VERSION        = "0.0.4";
 static const char *DESCRIPTION    = "sedu ambi light control with data from softhddevice";
 static const char *MAINMENUENTRY  = "Seduatmo";
-
-//***************************************************************************
-// Setup
-//***************************************************************************
-
-class cSeduSetup : public cMenuSetupPage, public cSeduService
-{
-   public:
-
-      cSeduSetup();
-
-   protected:
-
-      virtual void Setup();
-      virtual eOSState ProcessKey(eKeys Key);
-      virtual void Store();
-
-      const char* seduModes[smCount];
-      const char* cineBars[cbCount];
-      const char* seduRGBOrders[6];
-      int rgbOrderIndex;
-
-      cSeduConfig data;
-};
 
 //***************************************************************************
 // Plugin
@@ -148,6 +125,8 @@ eOSState cSeduPluginMenu::ProcessKey(eKeys key)
          plugin->stopAtmo();
       else if (cfg.viewMode != cSeduService::vmDetached && !plugin->isRunning())
          plugin->startAtmo();
+
+      Display();
    }
 
    if (key == kOk)
@@ -384,8 +363,30 @@ const char** cPluginSeduatmo::SVDRPHelpPages(void)
 }
 
 //***************************************************************************
-// Class Setup Menu
+// Class Setup
 //***************************************************************************
+
+const char* cSeduSetup::seduRGBOrders[] = 
+{
+   "RGB",
+   "RBG",
+   "BGR",
+   "BRG",
+   "GBR",
+   "GRB",
+
+   0
+};
+
+int cSeduSetup::toOrderIndex(const char* order)
+{
+   for (int i = 0; seduRGBOrders[i];i++)
+      if (strcasecmp(seduRGBOrders[i], order) == 0)
+         return i;
+
+   return na;
+}
+
 //***************************************************************************
 // Object
 //***************************************************************************
@@ -397,27 +398,18 @@ cSeduSetup::cSeduSetup()
 
    // sedu mode
 
-   seduModes[0] = "miniDMX";
-   seduModes[1] = "tpm2";
+   seduModes[smMiniDMX] 	= "miniDMX_512";
+   seduModes[smTpm2] 		= "tpm2";
+   seduModes[smMiniDMX_A1] 	= "miniDMX_192";
+   seduModes[smMiniDMX_B0] 	= "miniDMX_768";
 
    // rgb order
 
-   seduRGBOrders[0] = "RGB";
-   seduRGBOrders[1] = "RBG";
-   seduRGBOrders[2] = "BGR";
-   seduRGBOrders[3] = "BRG";
-   seduRGBOrders[4] = "GBR";
-   seduRGBOrders[5] = "GRB";
+   rgbOrderIndex = toOrderIndex(data.seduRGBOrder);
 
-   for (rgbOrderIndex = 0; rgbOrderIndex < 6; rgbOrderIndex++)
-   {
-      if (strcasecmp(seduRGBOrders[rgbOrderIndex], data.seduRGBOrder) == 0)
-         break;
-   }
-
-   if (rgbOrderIndex >= 6)
+   if (rgbOrderIndex = na)
       rgbOrderIndex = 0;
-   
+
    // Cinema Bars
 
    cineBars[0] = "Horizontal";
@@ -453,7 +445,7 @@ void cSeduSetup::Setup()
    Add(new cMenuEditIntItem(tr("Level green [%]"), &data.adjGreen, 0, 100));
    Add(new cMenuEditIntItem(tr("Level blue [%]"), &data.adjBlue, 0, 100));
 
-   Add(new cMenuEditStraItem(tr("SEDU mode"), (int*)&data.seduMode, 2, seduModes));
+   Add(new cMenuEditStraItem(tr("SEDU mode"), (int*)&data.seduMode, 4, seduModes));
    Add(new cMenuEditStraItem(tr("SEDU RGB order"), &rgbOrderIndex, 6, seduRGBOrders));
 }
 

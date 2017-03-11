@@ -1,6 +1,12 @@
 VDR Plugin 'seduatmo' Revision History
 --------------------------------------
 
+2016-01-03: Version 0.0.4
+      added handling of rpg order per led
+
+2015-10-11: Version 0.0.3
+      Fixed menu handling
+
 2012-11-26: Version 0.0.2
 
 2012-11-07: Version 0.0.1

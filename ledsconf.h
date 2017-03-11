@@ -26,16 +26,18 @@ class cLedConf : public cListObject, public cSeduService
       
       bool Parse(const char* s);
 
-      int X()       { return x; }
-      int ToX()     { return toX; }
-      int Y()       { return y; }
-      int ToY()     { return toY; }
-      int Pos()     { return lp; }
-      int isValid() { return x > na && y > na && lp > na; }
+      int X()                { return x; }
+      int ToX()              { return toX; }
+      int Y()                { return y; }
+      int ToY()              { return toY; }
+      int Pos()              { return lp; }
+      int isValid()          { return x > na && y > na && lp > na; }
+      const char* RgbOrder() { return rgbOrder; }
 
    private:
 
       bool parseRange(const char*& s, int& from, int& to);
+      bool parseRgbOrder(const char*& p, char* rgbOrder);
       const char* skipWs(const char* p);
 
       int x;
@@ -43,6 +45,7 @@ class cLedConf : public cListObject, public cSeduService
       int y;
       int toY;
       int lp;
+      char rgbOrder[3+TB];
 };
 
 //***************************************************************************

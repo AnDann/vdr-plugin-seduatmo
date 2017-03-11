@@ -21,8 +21,6 @@ KERNEL=="ttyUSB?", OWNER="vdr", ATTRS{product}=="SEDU Board USB", SYMLINK+="ttyS
 Adjust the seduconf.pl cofig script to generate a suiteable seduatmo.conf according to your configuration and place it in plugin cond dir.
 
 Blacklevel = 5         -> brightness for blacklevel
-Damping = 85           -> Threshold percentage(0-100), 0 off, max damping 100, proportion of adjustment, aligned in one cycle
-DampingThreshold = 20  -> Threshold für damping – no damping until change of RG and B is below this threshold
 DetectCineBars = 2     -> 0- horizontal; 1 - vertical; 2 - both
 FixedColorBlue = 0     -> B level of fixek color (0-255)
 FixedColorGreen = 101  -> G level of fixek color (0-255)
@@ -41,10 +39,7 @@ ShowMainmenu = 1       -> ;)
 Threshold = 17         -> level for black level detection, dark led until all LED below this threshold
 ViewMode = 0           -> 0 - atmo; 1 - fixed color; 2 - off
 
-
 Blacklevel = 5         -> Helligkeitslevel bei Schwarzem Bild
-Damping = 85           -> Dämpfung in Prozent (0-100), Anteil der Änderung die pro Zyklus geregelt wird
-DampingThreshold = 20  -> Schwelle für die Dämpfung, liegt die Änderung aller drei Farben (jeweils) eines Pixel darunter wird nicht gedämpft
 DetectCineBars = 2     -> 0- horizontal; 1 - vertical; 2 - both
 FixedColorBlue = 0     -> B Wert für Fixed Color (0-255)
 FixedColorGreen = 101  -> G Wert für Fixed Color (0-255)

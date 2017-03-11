@@ -9,6 +9,8 @@
 #ifndef __SEDU_SERVICE_H
 #define __SEDU_SERVICE_H
 
+#include "common.h"
+
 //***************************************************************************
 // Pixel - format as provided by softhddevice 
 //***************************************************************************
@@ -41,6 +43,8 @@ class cSeduService
       {
          smMiniDMX,
          smTpm2,
+		 smMiniDMX_A1,
+		 smMiniDMX_B0,
          smCount
       };
 
@@ -71,6 +75,7 @@ class cSeduService
          int y;
          int toY;
          LedPosition lp;
+         char rgbOrder[3+TB];
       };
 
       // static

@@ -112,8 +112,8 @@ class cSeduLine : public cSeduService
 
       int writeStartSeq();
       int writeEndSeq();
-      int writePix(Pixel* p);
-      int writeColor(Pixel* p, int index);
+      int writePix(int ledIdx, Pixel* p);
+      int writeColor(int ledIdx, Pixel* p, int index);
 
       // set ..
 

@@ -320,23 +320,25 @@ int cSeduThread::putData()
          gammaAdj(p);
          whiteAdj(p);
       }
+
+      else if (cfg.viewMode == vmColorWheel)
+      {
+         pixel = getColorWheel(1, led);
+         p = &pixel;
+      }
+
+      else if (cfg.viewMode == vmColorWheelStatic)
+      {
+         pixel = getColorWheel(0, led);
+         p = &pixel;
+      }
+
       else
-         if (cfg.viewMode == vmColorWheel)
-         {
-            pixel = getColorWheel(1, led);
-            p = &pixel;
-         }
-         else if (cfg.viewMode == vmColorWheelStatic)
-         {
-            pixel = getColorWheel(0, led);
-            p = &pixel;
-         }
-         else
-         {
-            p = &pFixedCol;
-         }
-      
-      sedu.writePix(p);
+      {
+         p = &pFixedCol;
+      }
+
+      sedu.writePix(led, p);
    }
    
    sedu.writeEndSeq();
@@ -577,6 +579,26 @@ void cSeduLine::setMode(SeduMode aMode, int channels)
          
          break;
       }
+      case smMiniDMX_A1:
+      {
+         byteStart = 0x5A;
+         byteMode = 0xA1;
+         byteEnd = 0xA5;
+         
+         dataBytes = 192;
+         
+         break;
+      }
+      case smMiniDMX_B0:
+      {
+         byteStart = 0x5A;
+         byteMode = 0xB0;
+         byteEnd = 0xA5;
+         
+         dataBytes = 768;
+         
+         break;
+      }
       case smTpm2:
       {
          byteStart = 0xC9;
@@ -607,7 +629,7 @@ int cSeduLine::detect()
 
    if (regcomp(&reg, pattern, REG_EXTENDED | REG_NOSUB))
    {
-      tell(0, "Invalid regular expression '%s'for usb device", pattern);
+      tell(0, "Invalid regular expression '%s' for usb device", pattern);
       regfree(&reg);
       return fail;
    }
@@ -637,7 +659,7 @@ int cSeduLine::detect()
    
    if (!deviceName) 
    {
-      tell(0, "Could not auto detect a usb device like '%s' in '/proc/tty/driver/usbserial'");
+      tell(0, "Could not auto detect a usb device like '%s' in '/proc/tty/driver/usbserial'",pattern );
       return fail;
    }
    
@@ -797,18 +819,20 @@ int cSeduLine::writeEndSeq()
 // Write Pixel
 //***************************************************************************
 
-int cSeduLine::writePix(Pixel* p)
+int cSeduLine::writePix(int ledIdx, Pixel* p)
 {
-   writeColor(p, 0);
-   writeColor(p, 1);
-   writeColor(p, 2);
+   writeColor(ledIdx, p, 0);
+   writeColor(ledIdx, p, 1);
+   writeColor(ledIdx, p, 2);
 
    return success;
 }
 
-int cSeduLine::writeColor(Pixel* p, int index)
+int cSeduLine::writeColor(int ledIdx, Pixel* p, int index)
 {
-   switch (cfg.seduRGBOrder[index])
+   cLed* led = &cfg.leds[ledIdx];
+
+   switch (led->rgbOrder[index])
    {
       case 'R': dataBytesSend += write(p ? p->r : 0); break;
       case 'B': dataBytesSend += write(p ? p->b : 0); break;
